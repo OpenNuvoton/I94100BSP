@@ -1,0 +1,223 @@
+==============================================
+I94100 BSP -V3.05.004 2020/02/17
+==============================================
+[Fixed]
+1.	SPI0/2 status register issue. Busy flag might work improperly due to harware glitch.
+	Fixed by checking RX&TX FIFO status.
+2.	VAD_Wakeup sample has incorrect BIQ coefficient.
+
+[Revised]
+1. Revise "CLK_EnablePLL" API for  more accurate parameters calculation.
+
+[Add]
+1.	"PWM_Timer" Demonstrate how to use PWM0 channel 0 to work as timer.
+
+==============================================
+I94100 BSP -V3.05.003 2019/10/24
+==============================================
+[Fixed]
+1.	I2S incorrect clock calculations and PCM mode setting constant.
+
+2.	Fixed PB5 I2C0 MFP define in sys.h.
+
+3.	Fixed PLL parameter calculation in clk.c & CLK_GetPLLClockFreq u32PllFreq calculation in clk.h.
+
+4.	Incorrect VAD power threshold constant define in vad.h and VAD_WriteBIQCoeff() in vad.c.
+
+5.	Fixed setting data flash base issue in FMC_RW sample.
+
+6.	ISP_HID/ISP_UART remove bank erase to fix data flash erase issue.
+
+7.	Fixed USBD_UAC_DMIC_DPWM_PDMA issue when ¡§Listen to this device¡¨ is checked.
+
+8.	Fixed incorrect SYS_RCADJ register address.
+
+[Revise]
+1.	Revised ¡§SPI_IS_BUSY()¡¨ using optimal method.
+
+2.	ISP_HID code change to interrupt approach.
+
+3.	Revised USBD DM pin mode setting in USBD_Open() in usbd.c.
+	
+==============================================
+I94100 BSP -V3.05.002 2018/10/02
+==============================================
+[Fixed]
+1.	"I2S_Slave_DPWM" might occur two channels swapping.
+
+2.	WindowsTool in "USBD_HID_Transfer", "USBD_Printer_And_HID_Transfer" and "USBD_VCOM_And_HIDTransfer" has incorrect target PID.
+	Resulting "HIDTransferTest.exe" could not work properly.
+
+[Revise]
+1.	Move buffer update process from main loop to EP3_IRQHandler, to prevent noise.
+	Revised samples: "USBD_UAC_DMIC_DPWM_PDMA_4CH", "USBD_UAC_DPWM", "USBD_UAC_DMIC_DPWM_PDMA" and "USBD_UAC_I2S_Output"
+
+==============================================
+I94100 BSP -V3.05.001 2018/09/25
+==============================================
+[Note]
+1.	This version is target for EVB that using "12.288 MHz External Crystal". Before using this BSP,
+	please make sure your external crystal is 12.288 MHz.
+
+[Add]
+1.	"SPI_QuadFlash" Demonstrate how to use SPI quad-mode to read/write data to external SPI-FLash.
+
+2.	"USBD_UAC_85L40_PDMA_4CH_VolCtrl" Demonstrate how to implement a USB 4-channel recording device using codec NAU85L40.
+	"USBD_UAC_85L40_PDMA_4CH_NoVolCtrl" is without volume control version.
+
+3.	"USBD_UAC_DMIC_DPWM_PDMA_4CH"  Demonstrate how to implement a USB 4-channel recording and playback device using DMIC and DPWM.
+
+4.	"USBD_UAC_DMIC_PDMA_4CH" Demonstrate how to implement a USB 4-channel recording device using DMIC.
+
+5.	"USBD_UAC_I2S_Output" Demonstrate how to implement a UAC device and output audio data by I2S.
+
+6.	"I2S_Slave_DPWM" Demonstrate how to implement a I2S slave device to receive audio data from master and playback by DPWM.
+
+[Revised]
+1. 	Revise "Set_ModuleClock" API for new USBD default clock source setting and USBD related samples for new I94100 ver.D.
+
+2.	Revise "I2S_Master", "I2S_DPWM_85L40", "I2S_DPWM_85L40_PDMA", "USBD_UAC_85L40_PDMA", "USBD_UAC_85L40_PDMA_4CH"
+	PLL frequency to be compatible with the new HXT frequency.
+
+3.	"FMC_ISPCTL" has new gerister, "PT" ISP Flash Program Time, at the FMC_ISPCTL[10:8].
+
+4.	Revise VID and PID to USBD related samples.
+
+[Fixed]
+1.	SPI_Open return incorrect peripheral frequency.
+
+2.	Revise startup_I94100.s to avoid WIC not reset after wake-up.
+
+3.	"FMC_IAP" All NVIC interrupt request need to be disabled before remapping.
+
+4.	"USB_Mass_Storage_DataFlash" LDO overdrive needs to be enabled if the HCLK is over 160 MHz.
+
+5.	"SYS_SPDMode_Wakeup" The SRAM retention check addres might be used by other variable after wake-up.
+
+6.	API "CLK_EnablePLL" has incorrect Input Divider - NR limitation.
+
+7.	API "CLK_SetPCLKDivider" has incorrect PCLKDIV calculation.
+
+==============================================
+I94100 BSP -V3.04.002 2018/05/17
+==============================================
+[Add]
+1.  "I2S_Master" & "I2S_Slave" sample code.
+	Demonstrate how to implement I2S Master and Slave mode, 
+	and how to transmit between two device.
+
+[Revised]
+1.  Simplify system clock initial of HCLK and PLL source in each demo sample.
+	User could set PLL and HCLK source just using one define option.
+
+2.	Add HIRC Auto Trim function to each USBD sample.
+	HIRC Auto Trim will be triggered for every 10 seconds, using TIMER0 as the timer. 
+	
+[Fixed]
+1.	Minor bugs, readme and comment incorrect description.
+
+==============================================
+I94100 BSP -V3.04.001 2018/04/13
+==============================================
+[Add]
+1.  IAR sample code for each demo (exclude ISP_HID, ISP_UART, FMC_IAP and FMC_MultiWordProgram).
+
+[Revised]
+1.  Revise system clock initial in each demo sample (exclude ISP_HID, ISP_UART, FMC_IAP and FMC_MultiWordProgram).
+    User could modify "ConfigSysClk.h" and call "SYSCLK_INITIATE" API to setup the desired clock configuration.
+
+[Fixed]
+2.  USB un-plug detection fail issue. Using GPIO internal resistor to create a discharge path for VBUS.
+
+==============================================
+I94100 BSP -V3.03.001 SP1 2018/03/13
+==============================================
+[Fixed]
+1.  "USBD_MassStorage_DataFlash"
+    USB-IF certificated issue and Android phone compatibale issue.
+
+2.  "USBD_UAC_85L40_PDMA", "USBD_UAC_DMIC_DPWM_PDMA"
+    fixing the sample rate synchronous issue.
+
+
+==============================================
+I94100 BSP -V3.03.001 2018/02/09
+==============================================
+[Add]
+1.  "USBD_UAC_85L40_PDMA" demo how to configure device as "USB Audio Class".
+    Recording voice via NAU85L40 using EVB-I94124ADI-NAU85L40B.
+
+2.  "USBD_HID_Transfer" demo how to implement a humane interface device.
+    (1) Transfer data from USB device to PC through USB HID interface.
+    (2) Transfer data type is interrupt in/out.
+
+==============================================
+I94100 BSP -V3.03.000 2018/01/24
+==============================================
+[Add]
+1.   ¡§USBD_UAC_DMIC_DPWM¡¨ demo how to configure device as ¡§USB Audio Class¡¨.
+         Recording voice via DMIC, playing audio via DPWM and using PDMA to transfer
+     data between DMIC and DPWM.
+
+2.   "VAD_Wakeup" use Voice Auto Detect(VAD) module to wake up idle-state CPU via VAD interrupt.
+
+==============================================
+I94100 BSP -V3.02.000 2018/01/05
+==============================================
+[Add]
+1.   "DMIC_DPWM" demo how to record voice from DMIC and
+     playback to DPWM
+
+2.   "SPI_I2S_Master" & "SPI_I2S_Slave" demo how to transmit and receive data in
+    SPI I2S master and slave mode.
+
+3.   "SPI_I2S_Master" demo how to transmit and receive data in SPI I2S master
+     mode.
+
+4.   "SYS_TrimHIRC" demo how to auto trim HIRC from LXT or SOF(USB).
+
+5.   "USBD_HID_Mouse" demo how to configure device as HID mouse controller.
+
+7.   "USBD_UAC_DPWM" demo how to configure device as "USB Audio Class" device
+     and output audio via DPWM.
+
+8.   "DMIC_DPWM_PDMA", "I2S_DPWM_85L40_PDMA" and "SPI_I2S_DPWM_88L25_PDMA" demo samples
+     show how to transfer data via PDMA between hardware IP.
+
+[Fixed]
+1.   Fixed "SPI_I2S_DPWM_88L25" driver sample mixer to process in main-loop to get
+     better sound quality and reduce computing.
+
+2.   Revised "SYS_PLLClockOutput" demo how to configure I94100 into turbo mode(192MHz).
+
+==============================================
+I94100 BSP -V3.01.000 2017/12/21
+==============================================
+[Add]
+1.	I2S_DPWM_85L40 sample code:
+(1)Use I2C to setup audio codec: 85L40.
+(2)Use I2S to receive audio data and DPWM to output audio
+
+2.	SPI_I2S_88L25 sample code:
+(1)	Use I2C to setup audio codec: 88L25.
+(2)	Use SPI_I2S to receive and transmit audio data with 88L25
+
+3.	SPI_I2S_DPWM sample code:
+(1)	Use I2C to setup audio codec: 88L25.
+
+4.	DPWM sample code:
+(1)	Demo how to use DPWM to play audio.
+
+5.	USBD_HID_Transfer:
+(1)	Demo how to setup USB device HID and transfer data with host.
+
+6.	USBD_MassStorage_DataFlash:
+(1)	Demo how to setup USB device as a 64KB removable disk to provide user to R/W data.
+
+[Fixed]
+1.   I94100.h revised.
+
+[Removed]
+1.	  EADC_BandGap sample.
+
+2.	  EADC_TempSensor sample.
